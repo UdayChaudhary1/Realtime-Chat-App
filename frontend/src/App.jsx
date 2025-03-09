@@ -6,8 +6,27 @@ import LoginPage from "./pages/LoginPage.jsx";
 import SettingsPage from "./pages/SettingsPage.jsx";
 import ProfilePage from "./pages/ProfilePage.jsx";
 import { Route } from "react-router-dom";
+import { useAuthStore } from "./store/useAuthStore.js";
+import { useEffect } from "react";
+import { isCheckingAuth } from "./store/useAuthStore.js";
 
 const App = () => {
+  const { authUser, checkAuth } = useAuthStore();
+
+  useEffect(() => {
+    checkAuth();
+  }, [checkAuth]);
+
+  console.log("🚀 ~ App ~ authUser:", authUser);
+
+  if(isCheckingAuth && !authUser){
+    return (
+      <div className="flex justify-center items-center h-screen`">
+        <Loader className="size-10 animate-spin"/>
+      </div>
+    )
+  }
+  
   return (
     <div>
       <Navbar />
