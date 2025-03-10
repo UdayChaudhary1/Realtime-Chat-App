@@ -11,6 +11,7 @@ export const signup = async (req, res) => {
         message: "All fields are required",
       });
     }
+
     if (password.length < 6) {
       return res.status(400).json({
         message: "Password must be at least 6 characters long",
@@ -39,7 +40,7 @@ export const signup = async (req, res) => {
 
       res.status(201).json({
         _id: newUser._id,
-        fullname: newUser.fullName,
+        fullName: newUser.fullName,
         email: newUser.email,
         profilePicture: newUser.profilePicture,
       });
@@ -54,8 +55,10 @@ export const signup = async (req, res) => {
 
 export const login = async (req, res) => {
   const { email, password } = req.body;
+
   try {
     const user = await User.findOne({ email });
+
     if (!user) {
       return res.status(400).json({ message: "Invalid credentials" });
     }
@@ -63,7 +66,9 @@ export const login = async (req, res) => {
     if (!isMatch) {
       return res.status(400).json({ message: "Invalid credentials" });
     }
+
     generateToken(user._id, res);
+
     res.status(200).json({
       _id: user._id,
       fullName: user.fullName,
@@ -98,7 +103,11 @@ export const updateProfile = async (req, res) => {
     }
 
     const uploadResponse = await cloudinary.uploader.upload(profilePicture);
-    const updatedUser = await User.findByIdAndUpdate(userId, {profilePicture: uploadResponse.secure_url}, {new: true});
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      { profilePicture: uploadResponse.secure_url },
+      { new: true }
+    );
 
     res.status(200).json(updatedUser);
   } catch (error) {
