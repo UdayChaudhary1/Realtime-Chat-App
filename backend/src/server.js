@@ -5,8 +5,9 @@ import "dotenv/config";
 import cookieParser from "cookie-parser";
 import messageRoutes from "./routes/message.route.js";
 import cors from "cors";
+import {app, server} from "./lib/socket.js";
 
-const app = express();
+const PORT = process.env.PORT || 3000;
 
 app.use(express.json({ limit: "1mb" }));
 app.use(cookieParser());
@@ -20,7 +21,7 @@ app.use(
 app.use("/api/auth", authRoutes);
 app.use("/api/messages", messageRoutes);
 
-app.listen(3000, () => {
+server.listen(PORT, () => {
   console.log("App listening on port 3000!");
   connectDB();
 });
